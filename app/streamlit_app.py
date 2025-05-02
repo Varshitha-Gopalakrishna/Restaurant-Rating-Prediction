@@ -16,12 +16,13 @@ logging.basicConfig(filename=log_path, level=logging.INFO)
 import streamlit as st
 import pandas as pd
 from src.utils import load_model
-import dill
+import json
 
 model = load_model()
 
-with open("../models/label_mappings.pkl", "rb") as f:
-    mappings = dill.load(f)
+
+with open("../models/label_mappings.json", "r") as f:
+    mappings = json.load(f)
 
 
 st.title("Restaurant Rating Predictor")
@@ -44,23 +45,31 @@ if st.button("Predict Rating"):
     elif cost <= 0 or votes < 0:
         st.warning("⚠️ Please enter valid numeric values.")
     else:
-        # Reverse map from label to encoded value
-        def reverse_map(value, mapping):
-            return list(mapping.keys())[list(mapping.values()).index(value)]
+        # Convert selected values to encoded labels
+        loc_encoded = int(list(mappings['location'].keys())[list(mappings['location'].values()).index(location)])
+        rest_encoded = int(list(mappings['rest_type'].keys())[list(mappings['rest_type'].values()).index(rest_type)])
+        cuisine_encoded = int(list(mappings['cuisines'].keys())[list(mappings['cuisines'].values()).index(cuisines)])
 
+        # Prepare input DataFrame
         input_df = pd.DataFrame([[
             online_order,
             book_table,
             votes,
-            reverse_map(location, mappings['location']),
-            reverse_map(rest_type, mappings['rest_type']),
-            reverse_map(cuisines, mappings['cuisines']),
-            cost,
-            
+            loc_encoded,
+            rest_encoded,
+            cuisine_encoded,
+            cost
         ]], columns=[
-            'online_order', 'book_table', 'votes', 'location', 'rest_type',
-            'cuisines', 'approx_cost_for_2_people'
+            'online_order', 'book_table', 'votes', 'location',
+            'rest_type', 'cuisines', 'approx_cost_for_2_people'
         ])
 
-        prediction = model.predict(input_df)[0]
-        st.success(f"Predicted Rating: ⭐ {round(prediction, 1)}")
+        input_df = input_df.astype(float)
+
+        # Make prediction
+        prediction = float(model.predict(input_df)[0])
+        prediction = round(prediction, 1)
+
+        logging.info(f"Prediction made with input: {input_df.to_dict()} → {prediction}")
+
+        st.success(f"Predicted Rating: ⭐ {prediction}")
