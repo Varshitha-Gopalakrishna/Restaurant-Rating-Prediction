@@ -13,8 +13,9 @@ logs/
 # Data files
 *.csv
 
-# Models
-*.pkl
+# Models (allow specific files)
+!models/model.pkl
+!models/label_mappings.pkl
 
 # OS and IDE files
 .DS_Store
