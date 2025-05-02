@@ -1,4 +1,4 @@
- # Python bytecode
+# Python bytecode
 __pycache__/
 *.py[cod]
 
@@ -13,9 +13,11 @@ logs/
 # Data files
 *.csv
 
-# Models (allow specific files)
+# Models
+models/*.pkl
+models/*.json
 !models/model.pkl
-!models/label_mappings.pkl
+!models/label_mappings.json.gz  # keep this small, compressed mapping
 
 # OS and IDE files
 .DS_Store

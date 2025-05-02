@@ -17,11 +17,12 @@ import streamlit as st
 import pandas as pd
 from src.utils import load_model
 import json
+import gzip
 
 model = load_model()
 
 
-with open("../models/label_mappings.json", "r") as f:
+with gzip.open("../models/label_mappings.json.gz", "rt", encoding="utf-8") as f:
     mappings = json.load(f)
 
 
