@@ -1,0 +1,18 @@
+# Core libraries
+pandas
+numpy
+
+# Machine Learning
+scikit-learn
+xgboost
+catboost
+
+# Serialization
+dill
+
+# Web App
+streamlit
+
+# visualisation
+matplotlib
+seaborn
