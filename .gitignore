@@ -6,6 +6,9 @@ __pycache__/
 venv/
 .env/
 
+# Ignore large datasets
+data/zomato.csv
+
 # Logs
 logs/
 *.log
@@ -23,3 +26,7 @@ models/*.json
 .DS_Store
 .idea/
 .vscode/
+
+# Ignore other large files
+*.pyd
+*.dll
