@@ -3,12 +3,14 @@ import os
 import logging
 import streamlit as st
 import pandas as pd
-from src.utils import load_model
+from ..src.utils import load_model
 import json
 import gzip
 
 # Add project root to sys.path (needed for streamlit app to access the src directory)
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src")))
+
+from utils import load_model
 
 # Setup logging
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
