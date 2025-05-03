@@ -22,8 +22,15 @@ model = load_model()
 base_dir = os.path.dirname(os.path.abspath(__file__))
 mapping_path = os.path.join(project_root, "models", "label_mappings.json.gz")
 
-with gzip.open(mapping_path, "rt", encoding="utf-8") as f:
-    mappings = json.load(f)
+
+try:
+    with gzip.open(mapping_path, "rt", encoding="utf-8") as f:
+        mappings = json.load(f)
+except Exception as e:
+    logging.error(f"Failed to load label mappings: {str(e)}")
+    st.error("⚠️ Failed to load label mappings. Please check your deployment files.")
+    st.stop()
+
 
 # Streamlit UI
 st.title("Restaurant Rating Predictor")
