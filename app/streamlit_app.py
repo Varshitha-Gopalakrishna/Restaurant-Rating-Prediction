@@ -7,9 +7,9 @@ import json
 import gzip
 
 # Add src folder to sys.path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from utils import load_model
+from src.utils import load_model
 
 # Setup logging
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
