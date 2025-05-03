@@ -7,7 +7,7 @@ from src.utils import load_model
 import json
 import gzip
 
-# Add project root to sys.path
+# Add project root to sys.path (needed for streamlit app to access the src directory)
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 # Setup logging
@@ -20,7 +20,7 @@ logging.basicConfig(filename=log_path, level=logging.INFO)
 # Load model
 model = load_model()
 
-# Load label mappings with absolute path
+# Load label mappings
 base_dir = os.path.dirname(os.path.abspath(__file__))
 mapping_path = os.path.join(base_dir, "..", "models", "label_mappings.json.gz")
 
@@ -52,7 +52,7 @@ if st.button("Predict Rating"):
         rest_encoded = int(list(mappings['rest_type'].keys())[list(mappings['rest_type'].values()).index(rest_type)])
         cuisine_encoded = int(list(mappings['cuisines'].keys())[list(mappings['cuisines'].values()).index(cuisines)])
 
-        # Prepare input
+        # Prepare input DataFrame
         input_df = pd.DataFrame([[online_order, book_table, votes, loc_encoded, rest_encoded, cuisine_encoded, cost]],
             columns=[
                 'online_order', 'book_table', 'votes', 'location',
@@ -60,7 +60,7 @@ if st.button("Predict Rating"):
             ])
         input_df = input_df.astype(float)
 
-        # Predict
+        # Make prediction
         prediction = float(model.predict(input_df)[0])
         prediction = round(prediction, 1)
 
