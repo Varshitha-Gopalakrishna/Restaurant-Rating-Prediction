@@ -5,7 +5,7 @@ import streamlit as st
 import pandas as pd
 import json
 import gzip
-
+st.write("✅ App is starting...") 
 from utils import load_model
 
 # Setup logging
@@ -33,8 +33,8 @@ try:
     with gzip.open(mapping_path, "rt", encoding="utf-8") as f:
         mappings = json.load(f)
 except Exception as e:
-    logging.error(f"Failed to load label mappings: {str(e)}")
-    st.error("⚠️ Failed to load label mappings. Please check your deployment files.")
+    logging.error(f"Error loading model: {e}")
+    st.error(f"❌ Model loading failed: {e}")  # <— add this
     st.stop()
 
 

@@ -11,6 +11,6 @@ def load_model(path=None):
         with open(path, "rb") as f:
             return dill.load(f)
     except Exception as e:
-        logging.error(f"❌ Failed to load model from {path}: {str(e)}")
-        st.error("⚠️ Failed to load model. Please check if 'model.pkl' exists in the 'models' folder.")
+        logging.error(f"Error loading model: {e}")
+        st.error(f"❌ Model loading failed: {e}")  
         st.stop()
