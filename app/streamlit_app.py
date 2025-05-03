@@ -6,14 +6,14 @@ import pandas as pd
 import json
 import gzip
 
-# ✅ Fix: Add src folder to sys.path
+# Add src folder to sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src")))
 
-# ✅ Now import from utils.py
+# import from utils.py
 from utils import load_model
 
 # Setup logging
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 log_dir = os.path.join(project_root, 'logs')
 os.makedirs(log_dir, exist_ok=True)
 log_path = os.path.join(log_dir, 'app.log')
@@ -24,7 +24,7 @@ model = load_model()
 
 # Load label mappings
 base_dir = os.path.dirname(os.path.abspath(__file__))
-mapping_path = os.path.join(base_dir, "..", "models", "label_mappings.json.gz")
+mapping_path = os.path.join(project_root, "models", "label_mappings.json.gz")
 
 with gzip.open(mapping_path, "rt", encoding="utf-8") as f:
     mappings = json.load(f)
