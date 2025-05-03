@@ -22,7 +22,7 @@ import gzip
 model = load_model()
 
 
-with gzip.open("../models/label_mappings.json.gz", "rt", encoding="utf-8") as f:
+with gzip.open("models/label_mappings.json.gz", "rt", encoding="utf-8") as f:
     mappings = json.load(f)
 
 
