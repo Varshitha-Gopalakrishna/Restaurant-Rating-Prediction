@@ -16,7 +16,13 @@ log_path = os.path.join(log_dir, 'app.log')
 logging.basicConfig(filename=log_path, level=logging.INFO)
 
 # Load model
-model = load_model()
+try:
+    model = load_model()
+    logging.info("Model loaded successfully.")
+except Exception as e:
+    logging.error(f"Error loading model: {e}")
+    st.error(f"Error loading model: {e}")
+    st.stop()
 
 # Load label mappings
 base_dir = os.path.dirname(os.path.abspath(__file__))
