@@ -1,33 +1,34 @@
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
 import logging
-# Get root project directory
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-log_dir = os.path.join(project_root, 'logs')
-os.makedirs(log_dir, exist_ok=True)
-
-# Absolute log file path
-log_path = os.path.join(log_dir, 'app.log')
-logging.basicConfig(filename=log_path, level=logging.INFO)
-
-
 import streamlit as st
 import pandas as pd
 from src.utils import load_model
 import json
 import gzip
 
+# Add project root to sys.path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+# Setup logging
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+log_dir = os.path.join(project_root, 'logs')
+os.makedirs(log_dir, exist_ok=True)
+log_path = os.path.join(log_dir, 'app.log')
+logging.basicConfig(filename=log_path, level=logging.INFO)
+
+# Load model
 model = load_model()
 
+# Load label mappings with absolute path
+base_dir = os.path.dirname(os.path.abspath(__file__))
+mapping_path = os.path.join(base_dir, "..", "models", "label_mappings.json.gz")
 
-with gzip.open("models/label_mappings.json.gz", "rt", encoding="utf-8") as f:
+with gzip.open(mapping_path, "rt", encoding="utf-8") as f:
     mappings = json.load(f)
 
-
+# Streamlit UI
 st.title("Restaurant Rating Predictor")
-
 
 location = st.selectbox("Location", list(mappings['location'].values()), index=None)
 cuisines = st.selectbox("Cuisines", list(mappings['cuisines'].values()), index=None)
@@ -46,28 +47,20 @@ if st.button("Predict Rating"):
     elif cost <= 0 or votes < 0:
         st.warning("⚠️ Please enter valid numeric values.")
     else:
-        # Convert selected values to encoded labels
+        # Encode selected values
         loc_encoded = int(list(mappings['location'].keys())[list(mappings['location'].values()).index(location)])
         rest_encoded = int(list(mappings['rest_type'].keys())[list(mappings['rest_type'].values()).index(rest_type)])
         cuisine_encoded = int(list(mappings['cuisines'].keys())[list(mappings['cuisines'].values()).index(cuisines)])
 
-        # Prepare input DataFrame
-        input_df = pd.DataFrame([[
-            online_order,
-            book_table,
-            votes,
-            loc_encoded,
-            rest_encoded,
-            cuisine_encoded,
-            cost
-        ]], columns=[
-            'online_order', 'book_table', 'votes', 'location',
-            'rest_type', 'cuisines', 'approx_cost_for_2_people'
-        ])
-
+        # Prepare input
+        input_df = pd.DataFrame([[online_order, book_table, votes, loc_encoded, rest_encoded, cuisine_encoded, cost]],
+            columns=[
+                'online_order', 'book_table', 'votes', 'location',
+                'rest_type', 'cuisines', 'approx_cost_for_2_people'
+            ])
         input_df = input_df.astype(float)
 
-        # Make prediction
+        # Predict
         prediction = float(model.predict(input_df)[0])
         prediction = round(prediction, 1)
 
