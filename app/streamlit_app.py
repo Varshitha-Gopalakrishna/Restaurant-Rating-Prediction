@@ -6,10 +6,7 @@ import pandas as pd
 import json
 import gzip
 
-# Add src folder to sys.path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
-from app.utils import load_model
+from utils import load_model
 
 # Setup logging
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
