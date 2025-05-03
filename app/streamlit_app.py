@@ -10,7 +10,7 @@ import gzip
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src")))
 
 # import from utils.py
-from utils import load_model
+from src.utils import load_model
 
 # Setup logging
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
