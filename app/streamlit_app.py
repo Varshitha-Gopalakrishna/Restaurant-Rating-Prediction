@@ -3,13 +3,13 @@ import os
 import logging
 import streamlit as st
 import pandas as pd
-from ..src.utils import load_model
 import json
 import gzip
 
-# Add project root to sys.path (needed for streamlit app to access the src directory)
+# ✅ Fix: Add src folder to sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src")))
 
+# ✅ Now import from utils.py
 from utils import load_model
 
 # Setup logging
@@ -49,12 +49,10 @@ if st.button("Predict Rating"):
     elif cost <= 0 or votes < 0:
         st.warning("⚠️ Please enter valid numeric values.")
     else:
-        # Encode selected values
         loc_encoded = int(list(mappings['location'].keys())[list(mappings['location'].values()).index(location)])
         rest_encoded = int(list(mappings['rest_type'].keys())[list(mappings['rest_type'].values()).index(rest_type)])
         cuisine_encoded = int(list(mappings['cuisines'].keys())[list(mappings['cuisines'].values()).index(cuisines)])
 
-        # Prepare input DataFrame
         input_df = pd.DataFrame([[online_order, book_table, votes, loc_encoded, rest_encoded, cuisine_encoded, cost]],
             columns=[
                 'online_order', 'book_table', 'votes', 'location',
@@ -62,7 +60,6 @@ if st.button("Predict Rating"):
             ])
         input_df = input_df.astype(float)
 
-        # Make prediction
         prediction = float(model.predict(input_df)[0])
         prediction = round(prediction, 1)
 
