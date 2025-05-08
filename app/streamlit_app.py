@@ -7,7 +7,7 @@ import json
 import gzip
 from utils import load_model
 
-st.write("✅ App is starting...") 
+# st.write("✅ App is starting...") 
 
 # Setup logging
 log_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logs')
@@ -19,7 +19,7 @@ logging.basicConfig(filename=log_path, level=logging.INFO)
 try:
     model = load_model()
     logging.info("✅ Model loaded successfully.")
-    st.write("✅ Model loaded")
+    # st.write("✅ Model loaded")
 except Exception as e:
     logging.error(f"❌ Error loading model: {e}")
     st.error(f"❌ Error loading model: {e}")
@@ -31,7 +31,7 @@ mapping_path = os.path.join(os.path.dirname(__file__), '..', 'models', 'label_ma
 try:
     with gzip.open(mapping_path, "rt", encoding="utf-8") as f:
         mappings = json.load(f)
-    st.write("✅ Mappings loaded")
+    # st.write("✅ Mappings loaded")
 except Exception as e:
     logging.error(f"❌ Error loading label mappings: {e}")
     st.error(f"❌ Mappings loading failed: {e}")
@@ -51,7 +51,7 @@ online_order = 1 if online_order == "Yes" else 0
 book_table = 1 if book_table == "Yes" else 0
 votes = st.number_input("Votes", min_value=0)
 
-st.write("✅ Ready for prediction input")
+# st.write("✅ Ready for prediction input")
 
 if st.button("Predict Rating"):
     if location == "Select" or cuisines == "Select" or rest_type == "Select":
