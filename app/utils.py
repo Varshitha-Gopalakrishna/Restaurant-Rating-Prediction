@@ -5,7 +5,7 @@ import logging
 
 def load_model(path=None):
     if path is None:
-        path = os.path.abspath(os.path.join("models", "model.pkl"))
+        path = os.path.join(os.path.dirname(__file__), '..', 'models', 'model.pkl')
     try:
         with open(path, "rb") as f:
             return dill.load(f)
