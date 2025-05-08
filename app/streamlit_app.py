@@ -19,19 +19,19 @@ logging.basicConfig(filename=log_path, level=logging.INFO)
 try:
     model = load_model()
     logging.info("✅ Model loaded successfully.")
-    # st.write("✅ Model loaded")
+    st.write("✅ Model loaded")
 except Exception as e:
     logging.error(f"❌ Error loading model: {e}")
     st.error(f"❌ Error loading model: {e}")
     st.stop()
 
 # Load label mappings
-mapping_path = os.path.join(os.path.dirname(__file__), '..', 'models', 'label_mappings.json.gz')
+mapping_path = os.path.abspath(os.path.join("models", "label_mappings.json.gz"))
 
 try:
     with gzip.open(mapping_path, "rt", encoding="utf-8") as f:
         mappings = json.load(f)
-    # st.write("✅ Mappings loaded")
+    st.write("✅ Mappings loaded")
 except Exception as e:
     logging.error(f"❌ Error loading label mappings: {e}")
     st.error(f"❌ Mappings loading failed: {e}")
