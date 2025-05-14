@@ -1,27 +1,31 @@
-import dill
 import os
 import streamlit as st
 import logging
+import dill
+import xgboost as xgb
 
-def load_model(path=None):
+def load_model():
     try:
-        # Get the absolute path to the directory containing this script
         base_dir = os.path.dirname(os.path.abspath(__file__))
+        model_dir = os.path.join(base_dir, '..', 'models')
 
-        # If no custom path is provided, use the default model path
-        if path is None:
-            path = os.path.join(base_dir, '..', 'models', 'model.pkl')
+        # Try loading XGBoost model first
+        xgb_model_path = os.path.join(model_dir, 'model.json')
+        if os.path.exists(xgb_model_path):
+            model = xgb.XGBRegressor()
+            model.load_model(xgb_model_path)
+            logging.info("✅ Loaded XGBoost model successfully.")
+            return model
 
-        # Load the model using dill
-        with open(path, "rb") as f:
-            model = dill.load(f)
+        # Otherwise load .pkl fallback (for RF/CatBoost)
+        pkl_model_path = os.path.join(model_dir, 'model.pkl')
+        if os.path.exists(pkl_model_path):
+            with open(pkl_model_path, 'rb') as f:
+                model = dill.load(f)
+            logging.info("✅ Loaded .pkl model successfully.")
+            return model
 
-        return model
-
-    except FileNotFoundError:
-        logging.error(f"❌ Model file not found at: {path}")
-        st.error(f"❌ Model file not found at: {path}")
-        st.stop()
+        raise FileNotFoundError("❌ No model found in models/ directory.")
 
     except Exception as e:
         logging.error(f"❌ Error loading model: {e}")
