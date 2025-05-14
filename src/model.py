@@ -5,6 +5,7 @@ from sklearn.ensemble import RandomForestRegressor
 from xgboost import XGBRegressor
 from catboost import CatBoostRegressor
 from sklearn.metrics import r2_score, mean_absolute_error
+import dill
 
 def train_and_compare_models(df):
     X = df[['online_order', 'book_table', 'votes', 'location', 'rest_type', 'cuisines', 'approx_cost_for_2_people']]
@@ -87,14 +88,11 @@ def train_and_compare_models(df):
     os.makedirs(model_dir, exist_ok=True)
 
     if best_name == 'XGBoost':
-        model_path = os.path.join(model_dir, 'model.json')
-        best_model.save_model(model_path)
-        print(f"✅ Saved best XGBoost model to {model_path}")
+        model_path = os.path.join(model_dir, 'model.xgb')
+        best_model.save_model(model_path)  # Native saving
     else:
-        import dill
         model_path = os.path.join(model_dir, 'model.pkl')
-        with open(model_path, 'wb') as f:
+        with open(model_path, "wb") as f:
             dill.dump(best_model, f)
-        print(f"✅ Saved best {best_name} model to {model_path}")
 
-    return best_model
+    print(f"✅ Saved best model ({best_name}) to {model_path}")
