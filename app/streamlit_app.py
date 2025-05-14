@@ -10,10 +10,13 @@ from utils import load_model
 # st.write("✅ App is starting...") 
 
 # Setup logging
-log_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logs')
-os.makedirs(log_dir, exist_ok=True)
-log_path = os.path.join(log_dir, 'app.log')
-logging.basicConfig(filename=log_path, level=logging.INFO)
+try:
+    log_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logs')
+    os.makedirs(log_dir, exist_ok=True)
+    log_path = os.path.join(log_dir, 'app.log')
+    logging.basicConfig(filename=log_path, level=logging.INFO)
+except Exception as e:
+    st.warning(f"⚠️ Logging setup failed: {e}")
 
 # Load model
 try:
@@ -26,9 +29,10 @@ except Exception as e:
     st.stop()
 
 # Load label mappings
-mapping_path = mapping_path = os.path.join('models', 'label_mappings.json.gz')
-
 try:
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    mapping_path = os.path.join(base_dir, 'models', 'label_mappings.json.gz')
+
     with gzip.open(mapping_path, "rt", encoding="utf-8") as f:
         mappings = json.load(f)
     # st.write("✅ Mappings loaded")
