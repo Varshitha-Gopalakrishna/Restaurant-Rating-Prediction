@@ -26,7 +26,7 @@ except Exception as e:
     st.stop()
 
 # Load label mappings
-mapping_path = os.path.join(os.path.dirname(__file__), '..', 'models', 'label_mappings.json.gz')
+mapping_path = mapping_path = os.path.join('models', 'label_mappings.json.gz')
 
 try:
     with gzip.open(mapping_path, "rt", encoding="utf-8") as f:
